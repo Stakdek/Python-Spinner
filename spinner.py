@@ -2,6 +2,8 @@
 from __future__ import print_function
 import time
 import sys
+import re
+import os
 from datetime import timedelta
 import datetime
 
@@ -13,7 +15,7 @@ def test_callback_true():
     '''
     global CALLED
     CALLED = CALLED + 1
-    if CALLED < 50: # equals ~ 10s = 0,2 * 50
+    if CALLED < 25: # equals ~ 5s = 0,2 * 50
         return True
     else:
         CALLED = 0
@@ -25,15 +27,38 @@ def test_callback_false():
     '''
     global CALLED
     CALLED = CALLED + 1
-    if CALLED < 50: # equals ~ 10s = 0,2 * 50
+    if CALLED < 25: # equals ~ 5s = 0,2 * 50
         return False
     else:
         CALLED = 0
         return True
-
 '''
 LOADING ANIMATION AND COUNTDOWN
 '''
+def loading_bar(progress=0, loading_style='#'):
+    '''
+    shows progress/loading bar
+    100 = 100%
+    50 = 50%
+    etc.
+    '''
+    if len(loading_style) != 1:
+        loading_style='#'
+
+    if progress > 100:
+        progress = 100
+    if progress <= 0:
+        progress = 1
+    terminal_size = os.popen('stty size', 'r').read().split()
+    terminal_width = int(terminal_size[1])
+    terminal_width_prog = int((float(terminal_width - 2)/ 100.0) * float(progress))
+    if terminal_width_prog <1:
+        terminal_width_prog = 1
+    terminal_loadingbar = str(terminal_width_prog * loading_style) + str((terminal_width - 2 - terminal_width_prog)* ' ')
+    print('[' + str(terminal_loadingbar) + ']' + '\r' ,end='')
+    sys.stdout.flush()
+
+
 def sleep(interval_time=0, countdown=False, callback=None, negative=False, loading_anim=None):
     '''
     makes cool print effect with countdown, to show it is working and not crashed
@@ -80,7 +105,14 @@ def sleep(interval_time=0, countdown=False, callback=None, negative=False, loadi
     end_time = datetime.datetime.now() + timedelta(seconds=interval_time)
     while datetime.datetime.now() <= end_time:
         if countdown:
-            print(str(loading_anim[anim_index]) + ' Remaining: ' + str(end_time - datetime.datetime.now()) + '\r' ,end='')
+            remaining_raw = end_time - datetime.datetime.now()
+            expr = '[0-9]+:[0-9]+:[0-9]+'
+            match = re.search(expr, str(remaining_raw))
+            if match:
+                remaining = match.group(0)
+            else:
+                remaining = str(remaining_raw) # full formatted time
+            print(str(loading_anim[anim_index]) + ' Remaining: ' + str(remaining) + '\r' ,end='')
         else:
             print(str(loading_anim[anim_index]) + '\r' ,end='')
         time.sleep(0.2)
@@ -89,16 +121,48 @@ def sleep(interval_time=0, countdown=False, callback=None, negative=False, loadi
             anim_index = 0
         sys.stdout.flush()
     return
+facepalm = '''
+............................................________
+....................................,.-'"...................``~.,
+.............................,.-"..................................."-.,
+.........................,/...............................................":,
+.....................,?......................................................,
+.................../...........................................................,}
+................./......................................................,:`^`..}
+.............../...................................................,:"........./
+..............?.....__.........................................:`.........../
+............./__.(....."~-,_..............................,:`........../
+.........../(_...."~,_........"~,_....................,:`........_/
+..........{.._$;_......"=,_......."-,_.......,.-~-,},.~";/....}
+...........((.....*~_......."=-._......";,,./`..../"............../
+...,,,___.`~,......"~.,....................`.....}............../
+............(....`=-,,.......`........................(......;_,,-"
+............/.`~,......`-...................................../
+.............`~.*-,.....................................|,./.....,__
+,,_..........}.>-._...................................|..............`=~-,
+.....`=~-,__......`,.................................
+...................`=~-,,.,...............................
+................................`:,,...........................`..............__
+.....................................`=-,...................,%`>--==``
+........................................_..........._,-%.......`
+...................................,
+'''
 
 if __name__ == '__main__':
-    interval_time = 10.0
+    # print(facepalm)
     # look cool while waiting and idling
     print('Starting showtime:')
-    print('Loading anim for time interval with countdown \nExample: sleep(interval_time, countdown=True|False|None)')
-    sleep(interval_time, countdown=True)
+    print('Loading anim for time interval with countdown \nExample: sleep(5.0, countdown=True|False|None)')
+    sleep(5.0, countdown=True)
     print('Loading anim while callback returns TRUE \nExample: sleep(callback=callable_function)')
     sleep(callback=test_callback_true)
     print('Loading anim while callback returns FALSE \nExample: sleep(callback=callable_function, negative=True)')
     sleep(callback=test_callback_false, negative=True)
-    print('Loading anim with another animation via arguments \nExample: sleep(interval_time=interval_time, loading_anim=[".  ",".. ","..."])')
-    sleep(interval_time=interval_time, loading_anim=[".  ",".. ","..."])
+    print('Loading anim with another animation via arguments \nExample: sleep(5.0, loading_anim=[" .  "," .. "," ..."])')
+    sleep(5.0, loading_anim=[" .  "," .. "," ..."])
+    x = 0
+    print('Loadingbar Example: loading_bar(0 - 100, loading_style="#")')
+    while x <= 100:
+        loading_bar(x)
+        time.sleep(0.1)
+        x = x + 1
