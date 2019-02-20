@@ -1,5 +1,6 @@
 # Python-Spinner
 Python-Spinner for Terminal Output
+A loadingbar is also available
 
 ## Example
 With `python spinner.py` (on Linux) you can see some examples.
