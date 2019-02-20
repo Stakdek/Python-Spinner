@@ -35,7 +35,7 @@ def test_callback_false():
 '''
 LOADING ANIMATION AND COUNTDOWN
 '''
-def loading_bar(progress=0, loading_style='#'):
+def loading_bar(progress=0, loading_style='■', state=None):
     '''
     shows progress/loading bar
     100 = 100%
@@ -43,7 +43,7 @@ def loading_bar(progress=0, loading_style='#'):
     etc.
     '''
     if len(loading_style) != 1:
-        loading_style='#'
+        loading_style='■'
 
     if progress > 100:
         progress = 100
@@ -55,6 +55,8 @@ def loading_bar(progress=0, loading_style='#'):
     if terminal_width_prog <1:
         terminal_width_prog = 1
     terminal_loadingbar = str(terminal_width_prog * loading_style) + str((terminal_width - 2 - terminal_width_prog)* ' ')
+    if state:
+        print(str(state) + str((terminal_width - len(state) +2) *' '))
     print('[' + str(terminal_loadingbar) + ']' + '\r' ,end='')
     sys.stdout.flush()
 
@@ -161,8 +163,16 @@ if __name__ == '__main__':
     print('Loading anim with another animation via arguments \nExample: sleep(5.0, loading_anim=[" .  "," .. "," ..."])')
     sleep(5.0, loading_anim=[" .  "," .. "," ..."])
     x = 0
-    print('Loadingbar Example: loading_bar(0 - 100, loading_style="#")')
+    state = 'Removing old files…'
+    print('Loadingbar Example: loading_bar(0 - 100, loading_style="■", state="…")')
     while x <= 100:
-        loading_bar(x)
-        time.sleep(0.1)
-        x = x + 1
+        if x == 20:
+            state = 'Configuring files…'
+        if x == 40:
+            state = 'Copy new files…'
+        if x == 80:
+            state = 'Install new files…'
+        loading_bar(x, loading_style="■",state=state)
+        time.sleep(0.5)
+        x = x + 10
+    print('\nDONE')

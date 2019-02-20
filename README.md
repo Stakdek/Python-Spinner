@@ -26,3 +26,13 @@ You can use a different loading/spinner animation
 import spinner
 spinner.sleep(interval_time=interval_time, loading_anim=[".  ",".. ","..."])
 ```
+You can use a loadingbar
+```python
+import spinner
+spinner.loading_bar(progress=0-100, loading_style="■",state=state)
+```
+The loadingbar will change its size and length dynamically.
+
+progress → percentage filling level of loadingbar
+loading_style → what string is used for the loadingbar (only a length of 1 is allowed)
+state → tell the user at what state it is. Example "Installing things…"
