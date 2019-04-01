@@ -173,6 +173,7 @@ if __name__ == '__main__':
         if x == 80:
             state = 'Install new files…'
         loading_bar(x, loading_style="■",state=state)
+        state = None
         time.sleep(0.5)
         x = x + 10
     print('\nDONE')
