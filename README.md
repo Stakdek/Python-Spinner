@@ -37,3 +37,17 @@ The loadingbar will change its size and length dynamically.
 * progress → percentage filling level of loadingbar
 * loading_style → what string is used for the loadingbar (only a length of 1 is allowed)
 * state → tell the user at what state it is. Example "Installing things…"
+
+
+
+<style>
+body{
+ background-color: #ffffff9e;
+ }
+html{
+ background-image: url("assets/logo.JPG");
+ background-color: #00a1ff;
+ background-position: center;
+ background-size: cover;
+     }
+</style>
