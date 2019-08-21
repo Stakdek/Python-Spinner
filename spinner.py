@@ -51,13 +51,13 @@ def loading_bar(progress=0, loading_style='■', state=None):
         progress = 1
     terminal_size = os.popen('stty size', 'r').read().split()
     terminal_width = int(terminal_size[1])
-    terminal_width_prog = int((float(terminal_width - 2)/ 100.0) * float(progress))
+    terminal_width_prog = int((float(terminal_width - 10)/ 100.0) * float(progress))
     if terminal_width_prog <1:
         terminal_width_prog = 1
-    terminal_loadingbar = str(terminal_width_prog * loading_style) + str((terminal_width - 2 - terminal_width_prog)* ' ')
+    terminal_loadingbar = str(terminal_width_prog * loading_style) + str((terminal_width - 11 - terminal_width_prog)* ' ')
     if state:
         print(str(state) + str((terminal_width - len(state) +2) *' '))
-    print('[' + str(terminal_loadingbar) + ']' + '\r' ,end='')
+    print(str(progress) + '% [' + str(terminal_loadingbar) + ']' + '\r' ,end='')
     sys.stdout.flush()
 
 
